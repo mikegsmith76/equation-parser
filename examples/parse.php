@@ -1,6 +1,6 @@
 <?php
 
-require_once "./vendor/autoload.php";
+require_once __DIR__ . "/../vendor/autoload.php";
 
 use Equation\Printer\Infix as InfixPrinter;
 use Equation\Printer\Prefix as PrefixPrinter;
