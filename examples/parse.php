@@ -6,8 +6,7 @@ use Equation\Printer\Infix as InfixPrinter;
 use Equation\Printer\Prefix as PrefixPrinter;
 use Equation\Printer\Postfix as PostfixPrinter;
 
-// $equation = "3 + 5 * 4 + 8";
-$equation = "( ( 3 + ( 5 * 4 ) ) + 8 )";
+$equation = "3+5*4+8";
 
 $parser = new Equation\Parser\Infix(
     new Equation\Lexer(),

@@ -4,6 +4,13 @@ namespace Equation;
 
 use Equation\Lexer\Token;
 
+/**
+ * Class Lexer
+ * 
+ * Splits an equation into a list of token strings that can be iterated over
+ * 
+ * Regex taken from https://github.com/andig/php-shunting-yard/blob/master/src/RR/Shunt/Scanner.php
+ */
 class Lexer
 {
     const SYMBOL_ADD = "+";
@@ -14,6 +21,8 @@ class Lexer
     const SYMBOL_R_PAREN = ")";
 
     protected $nextTokenIndex = 0;
+
+    protected $pattern = "/^([<>]=|<>|><|[!,><=&\|\+\-\*\/\^%\(\)]|\d*\.\d+|\d+\.\d*|\d+|[a-z_A-Zπ]+[a-z_A-Z0-9]*|[ \t]+)/";
 
     protected $symbolTokenMap = [
         self::SYMBOL_ADD => Token::T_OPERATOR_ADD,
@@ -28,7 +37,6 @@ class Lexer
 
     public function setTokenString(string $tokenString) : void
     {
-        $this->nextTokenIndex = 0;
         $this->evaluateTokenString($tokenString);
     }
 
@@ -47,20 +55,36 @@ class Lexer
 
     protected function evaluateTokenString(string $tokenString) : void
     {
-        $segments = array_map("trim", explode(" ", $tokenString));
+        // reset internal tokens list
+        $this->nextTokenIndex = 0;
+        $this->tokens = [];
 
-        foreach ($segments as $segment) {
-            if (is_numeric($segment)) {
-                $this->tokens[] = new Token(Token::T_NUMBER, $segment);
+        while(strlen($tokenString)) {
+            $segments = [];
+            preg_match($this->pattern, $tokenString, $segments);
+
+            $tokenString = substr($tokenString, strlen($segments[1]));
+            $tokenValue = trim($segments[1]);
+
+            if (empty($tokenValue)) {
                 continue;
             }
 
-            if (!empty($this->symbolTokenMap[$segment])) {
-                $this->tokens[] = new Token($this->symbolTokenMap[$segment]);
-                continue;
+            $token = null;
+
+            if (is_numeric($tokenValue)) {
+                $token = new Token(Token::T_NUMBER, $tokenValue);
             }
 
-            // functions etc
+            if (!empty($this->symbolTokenMap[$tokenValue])) {
+                $token = new Token($this->symbolTokenMap[$tokenValue]);
+            }
+
+            if (null === $token) {
+                throw new \Exception("Token could not be matched");
+            }
+
+            $this->tokens[] = $token;
         }
     }
 }
