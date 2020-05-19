@@ -11,6 +11,13 @@ use Equation\Tree\Operator\Subtract;
 use Equation\Tree\Operator\Multiply;
 use Equation\Tree\Operator\Divide;
 
+/**
+ * Class Infix
+ * 
+ * Infix expression parser based off Shunting Yard algorithm but modified to generate an AST of sorts
+ * 
+ * https://en.wikipedia.org/wiki/Shunting-yard_algorithm
+ */
 class Infix
 {
     const ASSOC_LEFT = 1;
