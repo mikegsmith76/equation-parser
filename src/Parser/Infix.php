@@ -2,7 +2,7 @@
 
 namespace Equation\Parser;
 
-use Equation\Lexer;
+use Equation\Lexer\Lexer;
 use Equation\Lexer\Token;
 use Equation\Tree\Node;
 use Equation\Tree\Number;
@@ -65,7 +65,7 @@ class Infix
 
     public function parse(string $tokenString) : Node
     {
-        $this->lexer->setTokenString($tokenString);
+        $this->lexer->analyse($tokenString);
 
         while ($this->lexer->hasMoreTokens()) {
             $currentToken = $this->lexer->getNextToken();
@@ -86,12 +86,12 @@ class Infix
 
                     while (!$this->operatorStack->isEmpty()) {
                         $stackToken = $this->operatorStack->pop();
-    
+
                         if (Token::T_L_PAREN === $stackToken->getType()) {
                             $matched = true;
                             break;
                         }
-    
+
                         $this->addOperatorNodeToStack($stackToken->getType(), $this->outputStack);
                     }
     
@@ -106,7 +106,7 @@ class Infix
                 case Token::T_OPERATOR_DIV:
                 case Token::T_OPERATOR_POW:
                     while (!$this->operatorStack->isEmpty()) {
-                        $stackToken = $this->operatorStack->bottom();
+                        $stackToken = $this->operatorStack->top();    
         
                         if (Token::T_L_PAREN === $stackToken->getType()) {
                             break;
@@ -122,7 +122,8 @@ class Infix
                         if (!($stackTokenPrecedence === $currentTokenPrecedence && $this->operatorAssoc[$currentToken->getType()] === self::ASSOC_LEFT)) {
                             break;
                         }
-        
+
+
                         $stackToken = $this->operatorStack->pop();
                         $this->addOperatorNodeToStack($stackToken->getType(), $this->outputStack);
                     }

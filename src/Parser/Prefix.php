@@ -2,7 +2,7 @@
 
 namespace Equation\Parser;
 
-use Equation\Lexer;
+use Equation\Lexer\Lexer;
 use Equation\Lexer\Token;
 use Equation\Tree\Node;
 use Equation\Tree\Number;
@@ -29,7 +29,7 @@ class Prefix
 
     public function parse(string $tokenString) : Node
     {
-        $this->lexer->setTokenString($tokenString);
+        $this->lexer->analyse($tokenString);
 
         if (!$this->lexer->hasMoreTokens()) {
             throw new Exception("Invalid Expression");

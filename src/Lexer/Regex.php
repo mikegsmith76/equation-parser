@@ -1,17 +1,15 @@
 <?php
 
-namespace Equation;
-
-use Equation\Lexer\Token;
+namespace Equation\Lexer;
 
 /**
- * Class Lexer
+ * Class Regex
  * 
  * Splits an equation into a list of token strings that can be iterated over
  * 
  * Regex taken from https://github.com/andig/php-shunting-yard/blob/master/src/RR/Shunt/Scanner.php
  */
-class Lexer
+class Regex implements Lexer
 {
     const SYMBOL_ADD = "+";
     const SYMBOL_SUB = "-";
@@ -35,7 +33,7 @@ class Lexer
 
     protected $tokens = [];
 
-    public function setTokenString(string $tokenString) : void
+    public function analyse(string $tokenString) : void
     {
         $this->evaluateTokenString($tokenString);
     }
@@ -45,7 +43,7 @@ class Lexer
         return $this->nextTokenIndex < count($this->tokens);
     }
 
-    public function getNextToken()
+    public function getNextToken() : Token
     {
         if (!$this->hasMoreTokens()) {
             throw new Exception("No More Tokens Available");
