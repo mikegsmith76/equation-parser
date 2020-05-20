@@ -7,6 +7,7 @@ use Equation\Tree\Operator\Add;
 use Equation\Tree\Operator\Subtract;
 use Equation\Tree\Operator\Multiply;
 use Equation\Tree\Operator\Divide;
+use Equation\Tree\Operator\Square;
 
 abstract class Printer
 {
@@ -15,6 +16,7 @@ abstract class Printer
         Subtract::class => "-",
         Multiply::class => "*",
         Divide::class => "/",
+        Square::class => "^",
     ];
 
     protected function isOperatorNode(Node $node) : bool

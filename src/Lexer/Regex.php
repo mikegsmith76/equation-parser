@@ -15,6 +15,7 @@ class Regex implements Lexer
     const SYMBOL_SUB = "-";
     const SYMBOL_MUL = "*";
     const SYMBOL_DIV = "/";
+    const SYMBOL_POW = "^";
     const SYMBOL_L_PAREN = "(";
     const SYMBOL_R_PAREN = ")";
 
@@ -27,6 +28,7 @@ class Regex implements Lexer
         self::SYMBOL_SUB => Token::T_OPERATOR_SUB,
         self::SYMBOL_MUL => Token::T_OPERATOR_MUL,
         self::SYMBOL_DIV => Token::T_OPERATOR_DIV,
+        self::SYMBOL_POW => Token::T_OPERATOR_POW,
         self::SYMBOL_L_PAREN => Token::T_L_PAREN,
         self::SYMBOL_R_PAREN => Token::T_R_PAREN,
     ];

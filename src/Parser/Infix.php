@@ -10,6 +10,7 @@ use Equation\Tree\Operator\Add;
 use Equation\Tree\Operator\Subtract;
 use Equation\Tree\Operator\Multiply;
 use Equation\Tree\Operator\Divide;
+use Equation\Tree\Operator\Square;
 
 /**
  * Class Infix
@@ -50,6 +51,7 @@ class Infix
         Token::T_OPERATOR_SUB => Subtract::class,
         Token::T_OPERATOR_MUL => Multiply::class,
         Token::T_OPERATOR_DIV => Divide::class,
+        Token::T_OPERATOR_POW => Square::class,
     ];
 
     public function __construct(
@@ -106,7 +108,7 @@ class Infix
                 case Token::T_OPERATOR_DIV:
                 case Token::T_OPERATOR_POW:
                     while (!$this->operatorStack->isEmpty()) {
-                        $stackToken = $this->operatorStack->top();    
+                        $stackToken = $this->operatorStack->top();
         
                         if (Token::T_L_PAREN === $stackToken->getType()) {
                             break;
@@ -118,11 +120,10 @@ class Infix
                         if ($stackTokenPrecedence < $currentTokenPrecedence) {
                             break;
                         }
-        
-                        if (!($stackTokenPrecedence === $currentTokenPrecedence && $this->operatorAssoc[$currentToken->getType()] === self::ASSOC_LEFT)) {
+
+                        if ($stackTokenPrecedence === $currentTokenPrecedence && $this->operatorAssoc[$currentToken->getType()] === self::ASSOC_RIGHT) {
                             break;
                         }
-
 
                         $stackToken = $this->operatorStack->pop();
                         $this->addOperatorNodeToStack($stackToken->getType(), $this->outputStack);
